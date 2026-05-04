@@ -1,9 +1,13 @@
 #include <iostream>
 #include "FiveOf_aKind.h"
 
-// dummy helper
+#include <map>
+
 bool isFiveKind(const Hand& hand){
-return hand.value == 11;
+    if (hand.cards.size() != 5) return false;
+    std::map<int, int> counts;
+    for (const auto& card : hand.cards) counts[card.rank]++;
+    return counts.size() == 1;
 }
 HandRank FiveKindChecker::check(const Hand& hand){
 if (isFiveKind(hand)){
