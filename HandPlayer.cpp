@@ -1,12 +1,21 @@
 #include <iostream>
+#include <string>
 #include "HandPlayer.h"
 using namespace std;
+
+string getRankName(int rank) {
+    if (rank == 11) return "Jack";
+    if (rank == 12) return "Queen";
+    if (rank == 13) return "King";
+    if (rank == 14) return "Ace";
+    return to_string(rank);
+}
 
 Hand HandPlayer::playHand(const Hand& generatedHand){
     Hand chosenHand;
     cout << "Kartu di tanganmu:\n";
     for (size_t i = 0; i < generatedHand.cards.size(); i++) {
-        cout << "[" << i << "] Rank: " << generatedHand.cards[i].rank 
+        cout << "[" << i << "] Rank: " << getRankName(generatedHand.cards[i].rank) 
               << " Suit: " << generatedHand.cards[i].suit << "\n";
     }
 

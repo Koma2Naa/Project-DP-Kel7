@@ -5,7 +5,7 @@ using namespace std;
 void GameManager::runSession(){
     cout << "=== Run Started ===\n";
     Hand hand = handGenerator.generateHand();
-    handPlayer.playHand();
+    handPlayer.playHand(hand);
     int score = scoringRule.scoreHand(hand);
     bool win = blindRule.checkBlind(score);
 
