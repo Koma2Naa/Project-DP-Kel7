@@ -1,9 +1,15 @@
 #include <iostream>
 #include "FourOf_aKind.h"
 
+#include <map>
+
 // dummy helper
 bool isFourKind(const Hand& hand){
-return hand.value == 8;
+    if (hand.cards.size() < 4) return false;
+    std::map<int, int> counts;
+    for (const auto& card : hand.cards) counts[card.rank]++;
+    for (auto const& [rank, count] : counts) if (count >= 4) return true;
+    return false;
 }
 HandRank FourKindChecker::check(const Hand& hand){
 if (isFourKind(hand)){
