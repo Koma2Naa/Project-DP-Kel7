@@ -3,23 +3,23 @@
 using namespace std;
 
 ScoringRule::ScoringRule(){
-    Highcardchecker.setNext(&Pairchecker);
-    Pairchecker.setNext(&Twopairchecker);
-    Twopairchecker.setNext(&Threekindchecker);
-    Threekindchecker.setNext(&Straightchecker);
-    Straightchecker.setNext(&Flushchecker);
-    Flushchecker.setNext(&Fullhousechecker);
-    Fullhousechecker.setNext(&Fourkindchecker);
-    Fourkindchecker.setNext(&Straightflushfhecker);
-    Straightflushfhecker.setNext(&Royalflushchecker);
-    Royalflushchecker.setNext(&Fivekindchecker);
-    Fivekindchecker.setNext(&Flushhousechecker);
-    Flushhousechecker.setNext(&Flushfivechecker);
+    Flushfivechecker.setNext(&Flushhousechecker);
+    Flushhousechecker.setNext(&Fivekindchecker);
+    Fivekindchecker.setNext(&Royalflushchecker);
+    Royalflushchecker.setNext(&Straightflushfhecker);
+    Straightflushfhecker.setNext(&Fourkindchecker);
+    Fourkindchecker.setNext(&Fullhousechecker);
+    Fullhousechecker.setNext(&Flushchecker);
+    Flushchecker.setNext(&Straightchecker);
+    Straightchecker.setNext(&Threekindchecker);
+    Threekindchecker.setNext(&Twopairchecker);
+    Twopairchecker.setNext(&Pairchecker);
+    Pairchecker.setNext(&Highcardchecker);
 }
 
 int ScoringRule::scoreHand(const Hand &hand){
 cout << "Calculating hand score...\n";
-HandRank rank = Highcardchecker.check(hand);
+HandRank rank = Flushfivechecker.check(hand);
 int score = convertRankToScore(rank);
 cout << "Final score = " << score << "\n";
 return score;

@@ -1,21 +1,32 @@
 #include <iostream>
-#include <cstdlib>
-#include <ctime>
+#include <vector>
+#include <random>
+#include <algorithm>
 #include "HandGenerator.h"
 using namespace std;
 
 Hand HandGenerator::generateHand(){
-    std::cout << "Generating cards for player...\n";
+    cout << "Mengacak dan membagikan kartu...\n";
     
-    Hand hand;
-    // srand(time(0));
-    // hand.value = rand() % 13 + 1;
-    for (int i = 0; i < 8; i++){
-        Card card;
-        card.rank = rand() % 13 + 1; // Rank between 1 and 13
-        char suits[] = {'H', 'D', 'C', 'S'}; // Hearts, Diamonds, Clubs, Spades
-        card.suit = suits[rand() % 4 + 1]; // Randomly select a suit
-        hand.cards.push_back(card);
+    // Membuat deck standar 52 kartu
+    vector<Card> deck;
+    char suits[] = {'H', 'D', 'C', 'S'}; // Hearts, Diamonds, Clubs, Spades
+    for (char suit : suits) {
+        for (int rank = 2; rank <= 14; ++rank) { // Rank 2 sampai 14 (As)
+            deck.push_back({rank, suit});
+        }
     }
+
+    // Mengacak deck (Shuffle)
+    random_device rd;
+    mt19937 g(rd());
+    shuffle(deck.begin(), deck.end(), g);
+
+    // Mengambil 5 kartu teratas untuk dimasukkan ke Hand
+    Hand hand;
+    for (int i = 0; i < 5; ++i) { 
+        hand.cards.push_back(deck[i]);
+    }
+
     return hand;
 }
