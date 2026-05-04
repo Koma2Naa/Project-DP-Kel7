@@ -1,9 +1,11 @@
 #include <iostream>
 #include "Flush.h"
 
-// dummy helper
 bool isFlush(const Hand& hand){
-return hand.value == 6;
+    if (hand.cards.size() < 5) return false;
+    char suit = hand.cards[0].suit;
+    for (const auto& card : hand.cards) if (card.suit != suit) return false;
+    return true;
 }
 HandRank FlushChecker::check(const Hand& hand){
 if (isFlush(hand)){

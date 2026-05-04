@@ -1,9 +1,15 @@
 #include <iostream>
 #include "Three_of_a_Kind.h"
 
+#include <map>
+
 // dummy helper
 bool isThreeKind(const Hand& hand){
-return hand.value == 4;
+    if (hand.cards.size() < 3) return false;
+    std::map<int, int> counts;
+    for (const auto& card : hand.cards) counts[card.rank]++;
+    for (auto const& [rank, count] : counts) if (count >= 3) return true;
+    return false;
 }
 HandRank ThreeKindChecker::check(const Hand& hand){
 if (isThreeKind(hand)){
