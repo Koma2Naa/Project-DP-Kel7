@@ -1,22 +1,27 @@
 #include <iostream>
-#include "FourOf_aKind.h"
-
+#include "FullHouse.h"
 #include <map>
 
 // dummy helper
-bool isFourKind(const Hand& hand){
-    if (hand.cards.size() < 4) return false;
+bool isFullHouse(const Hand& hand){
+    if (hand.cards.size() != 5) return false;
     std::map<int, int> counts;
     for (const auto& card : hand.cards) counts[card.rank]++;
-    for (auto const& [rank, count] : counts) if (count >= 4) return true;
-    return false;
+    if (counts.size() != 2) return false;
+    bool hasThree = false, hasTwo = false;
+    for (auto const& [rank, count] : counts) {
+        if (count == 3) hasThree = true;
+        if (count == 2) hasTwo = true;
+    }
+    return hasThree && hasTwo;
 }
-HandRank FourKindChecker::check(const Hand& hand){
-if (isFourKind(hand)){
-std::cout << "Detected Four of a Kind\n";
-return HandRank::Four_of_a_Kind;
-}
-if (nextChecker)
-return nextChecker->check(hand);
-return HandRank::HIGH_CARD;
+
+HandRank FullHouseChecker::check(const Hand& hand){
+    if (isFullHouse(hand)){
+        std::cout << "Detected FULL HOUSE\n";
+        return HandRank::FULL_HOUSE;
+    }
+    if (nextChecker)
+        return nextChecker->check(hand);
+    return HandRank::HIGH_CARD;
 }
