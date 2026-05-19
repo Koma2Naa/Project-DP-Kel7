@@ -1,5 +1,7 @@
 #include <iostream>
 #include <string>
+#include <set>
+#include <sstream>
 #include "HandPlayer.h"
 using namespace std;
 
@@ -13,22 +15,48 @@ string getRankName(int rank) {
 
 Hand HandPlayer::playHand(const Hand& generatedHand){
     Hand chosenHand;
+    set<int> selectedIndices;
     cout << "Kartu di tanganmu:\n";
     for (size_t i = 0; i < generatedHand.cards.size(); i++) {
         cout << "[" << i << "] Rank: " << getRankName(generatedHand.cards[i].rank) 
               << " Suit: " << generatedHand.cards[i].suit << "\n";
     }
 
-    cout << "Pilih indeks kartu yang ingin dimainkan (pisahkan dengan spasi, ketik -1 jika selesai memilih):\n";
+    cout << "Ketik indeks kartu yang ingin dimainkan (contoh: 0 1 4).\n";
+    cout << "Tekan [ENTER] langsung untuk memainkan SEMUA kartu: ";
+    
+    string input;
+    // // ws handles leading whitespace, then getline reads until newline
+    // if (cin.peek() == '\n') cin.ignore(); 
+    getline(cin, input);
+
+    if (input.empty()) {
+        cout << "Memainkan 5 kartu pertama...\n";
+        for(int i=0; i < std::min(5, (int)generatedHand.cards.size()); i++) {
+            chosenHand.cards.push_back(generatedHand.cards[i]);
+        }
+        return chosenHand;
+    }
+
+    stringstream ss(input);
     int index;
-    while (cin >> index && index != -1) {
-        if (index >= 0 && index < generatedHand.cards.size()) {
-            chosenHand.cards.push_back(generatedHand.cards[index]);
-        } else {
-            cout << "Indeks tidak valid!\n";
+    while (ss >> index) {
+        if (chosenHand.cards.size() >= 5) {
+            cout << "Peringatan: Maksimal 5 kartu! Sisa pilihan diabaikan.\n";
+            break;
+        }
+        
+        if (index >= 0 && index < (int)generatedHand.cards.size()) {
+            if (selectedIndices.find(index) == selectedIndices.end()) {
+                chosenHand.cards.push_back(generatedHand.cards[index]);
+                selectedIndices.insert(index);
+            }
+        } 
+        
+        else {
+            cout << "Indeks " << index << " tidak valid dan akan dilewati!\n";
         }
     }
     
-    cout << "Memainkan " << chosenHand.cards.size() << " kartu...\n";
     return chosenHand;
 }

@@ -4,6 +4,7 @@
 #include "ScoringRule.h"
 #include "BlindRule.h"
 #include "RewardRule.h"
+#include "Shop.h"
 
 class GameManager{
     public:
@@ -14,4 +15,6 @@ class GameManager{
         ScoringRule scoringRule;
         BlindRule blindRule;
         RewardRule rewardRule;
+        Shop shop;
+        int playerMoney = 0;
 };

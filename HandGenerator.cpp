@@ -22,9 +22,9 @@ Hand HandGenerator::generateHand(){
     mt19937 g(rd());
     shuffle(deck.begin(), deck.end(), g);
 
-    // Mengambil 5 kartu teratas untuk dimasukkan ke Hand
+    // Mengambil kartu-kartu teratas untuk dimasukkan ke Hand
     Hand hand;
-    for (int i = 0; i < 5; ++i) { 
+    for (int i = 0; i < 8; ++i) { 
         hand.cards.push_back(deck[i]);
     }
 
