@@ -2,5 +2,5 @@
 
 class RewardRule{
 public:
-    int earnMoney(bool win, int score);
+    int calculateTotalReward(bool win, int baseReward, int remainingHands, int playerMoney);
 };

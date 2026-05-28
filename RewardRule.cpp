@@ -1,13 +1,21 @@
-#include <iostream>
 #include "RewardRule.h"
-using namespace std;
+#include <algorithm>
+#include <iostream>
 
-int RewardRule::earnMoney(bool win, int score){
-    std::cout << "Calculating reward...\n";
+int RewardRule::calculateTotalReward(bool win, int baseReward, int remainingHands, int playerMoney){
+    if (!win) return 0;
+
+    int handBonus = remainingHands; // $1 per unused hand
+    int interest = std::min(5, playerMoney / 5); // $1 per $5, capped at $5
+
+    std::cout << "\n--- Reward Breakdown ---\n";
+    std::cout << "Base Reward:  $" << baseReward << "\n";
+    std::cout << "Hand Bonus:   $" << handBonus << "\n";
+    std::cout << "Interest:     $" << interest << "\n";
     
-    if (win){
-    return score;
-    }
-
-    return 0;
+    int total = baseReward + handBonus + interest;
+    std::cout << "Total Payout: $" << total << "\n";
+    std::cout << "------------------------\n";
+    
+    return total;
 }

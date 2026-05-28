@@ -2,5 +2,5 @@
 
 class BlindRule{
 public:
-    bool checkBlind(int score);
+    bool isBlindDefeated(int currentScore, int targetScore);
 };

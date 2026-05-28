@@ -35,7 +35,7 @@ void GameManager::runSession(){
             accumulatedScore += score;
             remainingHands--;
 
-            if (accumulatedScore >= targetScore) {
+            if (blindRule.isBlindDefeated(accumulatedScore, targetScore)) {
                 blindWon = true;
             } else if (remainingHands == 0) {
                 break;
@@ -49,9 +49,15 @@ void GameManager::runSession(){
         
         if (blindWon) {
             cout << "Result: WIN! You have defeated the " << currentBlind->getName() << ".\n";
-            int reward = currentBlind->getRewardMoney();
-            cout << "Money gained: $" << reward << "\n";
-            playerMoney += reward;
+            
+            int totalReward = rewardRule.calculateTotalReward(
+                true, 
+                currentBlind->getRewardMoney(), 
+                remainingHands, 
+                playerMoney
+            );
+            
+            playerMoney += totalReward;
             
             shop.rerollShop();
             shop.enterShop(playerMoney);

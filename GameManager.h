@@ -3,6 +3,7 @@
 #include "HandPlayer.h"
 #include "ScoringRule.h"
 #include "RewardRule.h"
+#include "BlindRule.h"
 #include "Shop.h"
 #include "BlindState.h"
 #include <memory>
@@ -15,7 +16,8 @@ class GameManager{
         HandGenerator handGenerator;
         HandPlayer handPlayer;
         ScoringRule scoringRule;
-        RewardRule rewardRule; // Akan disesuaikan jika diperlukan nanti
+        RewardRule rewardRule;
+        BlindRule blindRule;
         Shop shop;
         int playerMoney = 0;
         
