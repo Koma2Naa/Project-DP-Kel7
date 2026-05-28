@@ -6,6 +6,7 @@
 #include "BlindRule.h"
 #include "Shop.h"
 #include "BlindState.h"
+#include "Deck.h"
 #include <memory>
 
 class GameManager{
@@ -19,6 +20,7 @@ class GameManager{
         RewardRule rewardRule;
         BlindRule blindRule;
         Shop shop;
+        Deck deck;
         int playerMoney = 0;
         
         // Hands management

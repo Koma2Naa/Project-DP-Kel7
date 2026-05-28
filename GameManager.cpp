@@ -18,9 +18,15 @@ void GameManager::runSession(){
         cout << "Target Score to Win: " << targetScore << "\n";
         cout << "Reward on Victory: $" << currentBlind->getRewardMoney() << "\n";
         
+        deck.reset(); 
+        handGenerator.shuffleDeck(deck); // Use HandGenerator for shuffling
         remainingHands = maxHands; 
         int accumulatedScore = 0;
         bool blindWon = false;
+
+        // Start with a full hand of 8 cards
+        Hand playerHand;
+        playerHand.cards = handGenerator.drawCards(deck, 8); // Use HandGenerator for drawing
 
         while (remainingHands > 0 && !blindWon) {
             cout << "-------------------------\n";
@@ -28,11 +34,21 @@ void GameManager::runSession(){
             cout << "Current Score: " << accumulatedScore << " / " << targetScore << "\n";
             cout << "-------------------------\n";
 
-            Hand hand = handGenerator.generateHand();
-            Hand chosenHand = handPlayer.playHand(hand);
-            int score = scoringRule.scoreHand(chosenHand);
+            Hand chosenHand = handPlayer.playHand(playerHand);
             
-            accumulatedScore += score;
+            // Remove chosen cards from player's hand and discard them
+            for (const auto& chosenCard : chosenHand.cards) {
+                for (auto it = playerHand.cards.begin(); it != playerHand.cards.end(); ++it) {
+                    if (it->rank == chosenCard.rank && it->suit == chosenCard.suit) {
+                        playerHand.cards.erase(it);
+                        break;
+                    }
+                }
+            }
+            deck.discard(chosenHand.cards);
+
+            ScoreResult result = scoringRule.scoreHand(chosenHand);
+            accumulatedScore += result.getTotal();
             remainingHands--;
 
             if (blindRule.isBlindDefeated(accumulatedScore, targetScore)) {
@@ -41,6 +57,11 @@ void GameManager::runSession(){
                 break;
             } else {
                 cout << "\nScore increased! Need " << (targetScore - accumulatedScore) << " more.\n";
+                // Refill hand up to 8 cards
+                int cardsToDraw = 8 - playerHand.cards.size();
+                std::vector<Card> newCards = handGenerator.drawCards(deck, cardsToDraw); // Use HandGenerator for refilling
+                for (const auto& c : newCards) playerHand.cards.push_back(c);
+                cout << "Drew " << newCards.size() << " cards from deck.\n";
             }
         }
         

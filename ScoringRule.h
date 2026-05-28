@@ -12,11 +12,12 @@
 #include "FiveOf_aKind.h"
 #include "FlushHouse.h"
 #include "FlushFive.h"
+#include "ScoreResult.h"
 
 class ScoringRule{
 public:
     ScoringRule();
-    int scoreHand(const Hand &hand);
+    ScoreResult scoreHand(const Hand &hand);
 private:
     HighCardChecker Highcardchecker;
     PairChecker Pairchecker;
@@ -32,5 +33,5 @@ private:
     FlushHouseChecker Flushhousechecker;
     FlushFiveChecker Flushfivechecker;
 
-    int convertRankToScore(HandRank rank);
+    ScoreResult convertRankToScore(HandRank rank);
 };

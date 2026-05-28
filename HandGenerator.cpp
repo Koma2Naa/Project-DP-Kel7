@@ -5,28 +5,20 @@
 #include "HandGenerator.h"
 using namespace std;
 
-Hand HandGenerator::generateHand(){
-    cout << "Mengacak dan membagikan kartu...\n";
-    
-    // Membuat deck standar 52 kartu
-    vector<Card> deck;
-    char suits[] = {'H', 'D', 'C', 'S'}; // Hearts, Diamonds, Clubs, Spades
-    for (char suit : suits) {
-        for (int rank = 2; rank <= 14; ++rank) { // Rank 2 sampai 14 (As)
-            deck.push_back({rank, suit});
-        }
-    }
-
-    // Mengacak deck (Shuffle)
+void HandGenerator::shuffleDeck(Deck& deck) {
+    cout << "Mengacak deck...\n";
+    vector<Card>& cards = deck.getCards();
     random_device rd;
     mt19937 g(rd());
-    shuffle(deck.begin(), deck.end(), g);
+    shuffle(cards.begin(), cards.end(), g);
+}
 
-    // Mengambil kartu-kartu teratas untuk dimasukkan ke Hand
-    Hand hand;
-    for (int i = 0; i < 8; ++i) { 
-        hand.cards.push_back(deck[i]);
+vector<Card> HandGenerator::drawCards(Deck& deck, int count) {
+    vector<Card>& cards = deck.getCards();
+    vector<Card> drawn;
+    for (int i = 0; i < count && !cards.empty(); ++i) {
+        drawn.push_back(cards.back());
+        cards.pop_back();
     }
-
-    return hand;
+    return drawn;
 }
