@@ -7,6 +7,11 @@ GameManager::GameManager() : currentAnte(1) {
     currentBlind = make_unique<SmallBlindState>();
 }
 
+void GameManager::addJoker(std::unique_ptr<Joker> joker) {
+    cout << "Added Joker to inventory: " << joker->getName() << "\n";
+    activeJokers.push_back(std::move(joker));
+}
+
 void GameManager::runSession(){
     cout << "=== Run Started ===\n";
     bool isPlaying = true;
@@ -48,6 +53,15 @@ void GameManager::runSession(){
             deck.discard(chosenHand.cards);
 
             ScoreResult result = scoringRule.scoreHand(chosenHand);
+            
+            // Apply Joker bonuses
+            for (auto& joker : activeJokers) {
+                joker->applyScoreBonus(chosenHand, result);
+            }
+            if (!activeJokers.empty()) {
+                cout << "Final Score after Jokers: " << result.chips << " x " << result.multiplier << " = " << result.getTotal() << "\n";
+            }
+
             accumulatedScore += result.getTotal();
             remainingHands--;
 
@@ -80,8 +94,21 @@ void GameManager::runSession(){
             
             playerMoney += totalReward;
             
-            shop.rerollShop();
-            shop.enterShop(playerMoney);
+            std::vector<std::string> ownedNames;
+            for (const auto& j : activeJokers) {
+                ownedNames.push_back(j->getName());
+            }
+
+            shop.rerollShop(ownedNames);
+            auto boughtItems = shop.enterShop(playerMoney);
+            for (auto& item : boughtItems) {
+                Joker* jokerPtr = dynamic_cast<Joker*>(item.get());
+                if (jokerPtr) {
+                    // Release from the generic ShopItem unique_ptr and cast to Joker unique_ptr
+                    std::unique_ptr<Joker> joker(static_cast<Joker*>(item.release()));
+                    addJoker(std::move(joker));
+                }
+            }
 
             cout << "Leaving " << currentBlind->getName() << "...\n";
             currentBlind = currentBlind->nextState(currentAnte);

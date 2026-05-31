@@ -7,12 +7,15 @@
 #include "Shop.h"
 #include "BlindState.h"
 #include "Deck.h"
+#include "Joker.h"
 #include <memory>
+#include <vector>
 
 class GameManager{
     public:
         GameManager();
         void runSession();
+        void addJoker(std::unique_ptr<Joker> joker);
     private:
         HandGenerator handGenerator;
         HandPlayer handPlayer;
@@ -29,4 +32,6 @@ class GameManager{
 
         std::unique_ptr<BlindState> currentBlind;
         int currentAnte;
+
+        std::vector<std::unique_ptr<Joker>> activeJokers;
 };
