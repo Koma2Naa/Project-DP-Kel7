@@ -35,6 +35,7 @@ void GameManager::runSession(){
 
         while (remainingHands > 0 && !blindWon) {
             cout << "-------------------------\n";
+            displayActiveJokers();
             cout << "Remaining Hands: " << remainingHands << "\n";
             cout << "Current Score: " << accumulatedScore << " / " << targetScore << "\n";
             cout << "-------------------------\n";
@@ -119,4 +120,17 @@ void GameManager::runSession(){
     }
     
     cout << "=== Run Ended ===\n";
+}
+
+void GameManager::displayActiveJokers() const {
+    cout << "Active Jokers: ";
+    if (activeJokers.empty()) {
+        cout << "(None)\n";
+    } else {
+        for (size_t i = 0; i < activeJokers.size(); ++i) {
+            cout << "\n[" << activeJokers[i]->getName() << "]";
+            if (i < activeJokers.size() - 1) cout << ", ";
+        }
+        cout << "\n";
+    }
 }

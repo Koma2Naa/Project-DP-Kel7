@@ -16,6 +16,7 @@ class GameManager{
         GameManager();
         void runSession();
         void addJoker(std::unique_ptr<Joker> joker);
+        void displayActiveJokers() const;
     private:
         HandGenerator handGenerator;
         HandPlayer handPlayer;
