@@ -1,5 +1,8 @@
 #include "Shop.h"
+#include "ChipJoker.h"
 #include "MultiJoker.h"
+#include "FullHouseJoker.h"
+#include "TwoPairJoker.h"
 #include <iostream>
 #include <limits>
 #include <string>
@@ -16,9 +19,10 @@ std::vector<std::unique_ptr<ShopItem>> Shop::generateItemPool() {
     std::vector<std::unique_ptr<ShopItem>> pool;
     // Central registry for all possible items in the game
     pool.push_back(make_unique<MultiJoker>());
-    
+    pool.push_back(make_unique<ChipJoker>());
+    pool.push_back(make_unique<FullHouseJoker>());
+    pool.push_back(make_unique<TwoPairJoker>());
     // Future Jokers can be added here
-    // pool.push_back(make_unique<ChipsJoker>());
     
     return pool;
 }
