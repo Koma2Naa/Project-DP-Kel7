@@ -1,13 +1,13 @@
-#include "AddCardSkipStrategy.h"
+#include "AddCardSkipCommand.h"
 #include "GameManager.h"
 #include <random>
 #include <iostream>
 
-std::string AddCardSkipStrategy::getDescription() const {
+std::string AddCardSkipCommand::getDescription() const {
     return "Add a random card to deck";
 }
 
-void AddCardSkipStrategy::apply(GameManager& gm) {
+void AddCardSkipCommand::execute(GameManager& gm) {
     std::random_device rd;
     std::mt19937 g(rd());
     std::uniform_int_distribution<> rankDis(2, 14);

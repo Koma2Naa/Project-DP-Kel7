@@ -1,9 +1,9 @@
 #include "SmallBlindState.h"
 #include "BigBlindState.h"
-#include "SkipStrategyFactory.h"
+#include "SkipCommandFactory.h"
 
 SmallBlindState::SmallBlindState() {
-    skipStrategy = SkipStrategyFactory::getRandomStrategy();
+    skipCommand = SkipCommandFactory::getRandomCommand();
 }
 
 std::string SmallBlindState::getName() const { return "Small Blind"; }
@@ -14,6 +14,6 @@ std::unique_ptr<BlindState> SmallBlindState::nextState(int& ante) const {
     return std::make_unique<BigBlindState>();
 }
 
-SkipStrategy* SmallBlindState::getSkipStrategy() const {
-    return skipStrategy.get();
+SkipCommand* SmallBlindState::getSkipCommand() const {
+    return skipCommand.get();
 }

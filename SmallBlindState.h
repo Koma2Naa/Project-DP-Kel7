@@ -8,8 +8,8 @@ public:
     int getTargetScore(int ante) const override;
     int getRewardMoney() const override;
     std::unique_ptr<BlindState> nextState(int& ante) const override;
-    SkipStrategy* getSkipStrategy() const override;
+    SkipCommand* getSkipCommand() const override;
 
 private:
-    std::unique_ptr<SkipStrategy> skipStrategy;
+    std::unique_ptr<SkipCommand> skipCommand;
 };
