@@ -3,6 +3,7 @@
 #include "MultiJoker.h"
 #include "FullHouseJoker.h"
 #include "TwoPairJoker.h"
+#include "PairMultiplierJoker.h"
 #include <iostream>
 #include <limits>
 #include <string>
@@ -22,6 +23,7 @@ std::vector<std::unique_ptr<ShopItem>> Shop::generateItemPool() {
     pool.push_back(make_unique<ChipJoker>());
     pool.push_back(make_unique<FullHouseJoker>());
     pool.push_back(make_unique<TwoPairJoker>());
+    pool.push_back(make_unique<PairMultiplierJoker>());
     // Future Jokers can be added here
     
     return pool;
