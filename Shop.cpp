@@ -1,9 +1,5 @@
 #include "Shop.h"
-#include "ChipJoker.h"
-#include "MultiJoker.h"
-#include "FullHouseJoker.h"
-#include "TwoPairJoker.h"
-#include "PairMultiplierJoker.h"
+#include "JokerFactory.h"
 #include <iostream>
 #include <limits>
 #include <string>
@@ -16,23 +12,10 @@ using namespace std;
 Shop::Shop() {
 }
 
-std::vector<std::unique_ptr<ShopItem>> Shop::generateItemPool() {
-    std::vector<std::unique_ptr<ShopItem>> pool;
-    // Central registry for all possible items in the game
-    pool.push_back(make_unique<MultiJoker>());
-    pool.push_back(make_unique<ChipJoker>());
-    pool.push_back(make_unique<FullHouseJoker>());
-    pool.push_back(make_unique<TwoPairJoker>());
-    pool.push_back(make_unique<PairMultiplierJoker>());
-    // Future Jokers can be added here
-    
-    return pool;
-}
-
-void Shop::rerollShop(const std::vector<std::string>& ownedItemNames) {
+void Shop::rerollShop(const std::vector<std::string>& ownedItemNames, int& freeJokersCount) {
     availableItems.clear();
     
-    auto fullPool = generateItemPool();
+    auto fullPool = JokerFactory::generateFullJokerPool();
     std::vector<std::unique_ptr<ShopItem>> filteredPool;
 
     // Filter out items the player already owns
@@ -57,6 +40,12 @@ void Shop::rerollShop(const std::vector<std::string>& ownedItemNames) {
     // Pick up to maxShopSize items
     int itemsToPick = std::min(maxShopSize, static_cast<int>(filteredPool.size()));
     for (int i = 0; i < itemsToPick; ++i) {
+        // Apply Free Joker Tag discount
+        if (freeJokersCount > 0) {
+            filteredPool[i]->setPrice(0);
+            freeJokersCount--;
+            cout << "[SHOP] " << filteredPool[i]->getName() << " is FREE due to a Tag!\n";
+        }
         availableItems.push_back(std::move(filteredPool[i]));
     }
 }

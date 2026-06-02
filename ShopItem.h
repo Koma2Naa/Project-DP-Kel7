@@ -8,6 +8,7 @@ public:
 
     std::string getName() const { return name; }
     int getPrice() const { return price; }
+    void setPrice(int p) { price = p; }
 
     virtual void onPurchase() = 0; 
 

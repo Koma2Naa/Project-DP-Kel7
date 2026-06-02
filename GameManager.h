@@ -22,6 +22,9 @@ class GameManager{
         int getMoney() const { return playerMoney; }
         std::vector<std::string> getOwnedJokerNames() const;
 
+        void addPendingFreeShopJoker() { pendingFreeShopJokers++; }
+        int& getPendingFreeShopJokers() { return pendingFreeShopJokers; }
+
     private:
         HandGenerator handGenerator;
         HandPlayer handPlayer;
@@ -40,4 +43,5 @@ class GameManager{
         int currentAnte;
 
         std::vector<std::unique_ptr<Joker>> activeJokers;
+        int pendingFreeShopJokers = 0;
 };

@@ -129,7 +129,7 @@ void GameManager::runSession(){
                 ownedNames.push_back(j->getName());
             }
 
-            shop.rerollShop(ownedNames);
+            shop.rerollShop(ownedNames, pendingFreeShopJokers);
             auto boughtItems = shop.enterShop(playerMoney);
             for (auto& item : boughtItems) {
                 Joker* jokerPtr = dynamic_cast<Joker*>(item.get());
