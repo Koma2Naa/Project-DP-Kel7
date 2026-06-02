@@ -16,6 +16,42 @@ The system is designed with a focus on **Design Patterns** to ensure modularity,
 
 ## Architectural Design Patterns
 
+### Class Diagram (ASCII)
+```text
+                                  +-------------------+
+                                  |    GameManager    |
+                                  +-------------------+
+                                  | - playerMoney     |
+      +---------------------------| - currentAnte     |<-------------------------+
+      |                           | - remainingHands  |                          |
+      |   (State Pattern)         +-------------------+                          |
+      |          1                          | 1                                  |
+      v                                     v                                    |
++------------+          +-------+   +--------------+   +------------+   +-------------------+
+| BlindState |          | Shop  |   | ScoringRule  |   | HandPlayer |   |   JokerFactory    |
++------------+          +-------+   +--------------+   +------------+   +-------------------+
+      ^                     |               |                 |                  |
+      |                     |               v                 v                  v
++-----+--------------+      |       +-------------+    +------------+    +-------------------+
+| SmallBlindState    |      |       | ScoreResult |    |    Hand    |    |       Joker       |
+| BigBlindState      |      |       +-------------+    +------------+    +-------------------+
+| BossBlindState     |      |               |                 |                  ^
++--------------------+      |               |                 |                  | (Score Mod)
+      |                     |               v                 |          +-------+-----------+
+      v (Command Pattern)   |      +------------------+       |          | ChipJoker         |
++-------------+             |      | PokerHandChecker |<------+          | MultiJoker        |
+| SkipCommand |<------------+      +------------------+                  | ...               |
++-------------+                    | (Chain of Resp.) |                  +-------------------+
+      ^                            +------------------+
+      |                                     |
++-----+-------------------+        +--------+---------+
+| MoneySkipCommand        |        | PairChecker      |
+| FreeJokerSkipCommand    |        | FlushChecker     |
+| ExtraHandSkipCommand    |        | ...              |
+| AddCardSkipCommand      |        +------------------+
++-------------------------+
+```
+
 ### 1. Chain of Responsibility (Hand Identification)
 Used to decouple the identification of poker hands from the scoring logic.
 -   **Structure**: Each `PokerHandChecker` (e.g., `FlushChecker`, `PairChecker`) knows how to identify one specific hand.
@@ -88,3 +124,65 @@ g++ -std=c++17 *.cpp -o poker
 ```bash
 ./poker
 ```
+
+---
+
+## Runtime Analysis
+
+### Example Output (Ante 1 Cycle)
+Below is a simulated execution trace of the game loop:
+
+```text
+=== Run Started ===
+
+=== New Blind Started ===
+Current Blind: Small Blind (Ante 1)
+Target Score to Win: 5
+Reward on Victory: $3
+Skip Reward: Double Tag (Get $10 immediately)
+
+>>> [P]lay Blind or [S]kip? (P/S): P
+
+Active Jokers: (None)
+Remaining Hands: 4
+Current Score: 0 / 5
+-------------------------
+Kartu di tanganmu:
+[0] Rank: Ace Suit: Hearts
+[1] Rank: 10 Suit: Diamonds
+[2] Rank: 2 Suit: Spades
+[3] Rank: Ace Suit: Clubs
+[4] Rank: 5 Suit: Hearts
+...
+Ketik indeks kartu yang ingin dimainkan: 0 3
+Memainkan Pair (Ace)...
+
+Final Score: 10 x 2 = 20
+Checking blind requirement...
+Final Score: 20 | Target: 5
+Result: WIN! You have defeated the Small Blind.
+
+--- Entering Shop ---
+Money: $3
+1. [Joker] Chip Joker - $4
+2. [Joker] Multi Joker - $4
+Items purchased: None
+Leaving Small Blind...
+
+=== New Blind Started ===
+Current Blind: Big Blind (Ante 1)
+Target Score to Win: 20
+...
+```
+
+### Data Lifecycle Analysis
+
+| Variabel | Scope | Initial State | Mutation Point (Kapan Berubah) | Final State |
+| :--- | :--- | :--- | :--- | :--- |
+| **Money** | `GameManager` | `0` | Bertambah saat menang Blind atau `MoneySkipCommand`. Berkurang saat beli di `Shop`. | Akumulatif sepanjang Run. |
+| **Ante** | `GameManager` | `1` | Bertambah 1 setiap kali `BossBlindState` dikalahkan melalui `nextState()`. | Meningkat hingga kalah. |
+| **Remaining Hands** | `GameManager` | `maxHands` (4) | Dikurangi 1 setiap kali `handPlayer.playHand()` dipanggil. Direset setiap Blind baru. | 0 = Game Over jika skor < Target. |
+| **Skip Command / Tag** | `BlindState` | `Random` | Dihasilkan oleh `SkipCommandFactory`. Dieksekusi jika player pilih `Skip`. | Sekali pakai (One-shot). |
+| **Scoring (Chip, Mult)** | `ScoreResult` | `0, 0` | Dihitung pertama oleh `ScoringRule` (Base), lalu dimodifikasi oleh `Joker::applyScoreBonus`. | Direset setiap Hand yang dimainkan. |
+| **Joker** | `GameManager` | `Empty` | Ditambahkan saat beli di `Shop` ke dalam `std::vector<Joker>`. | Bertahan permanen kecuali dijual. |
+| **Blind** | `GameManager` | `Small` | Berubah state melalui `nextState()`: Small -> Big -> Boss -> Small (Ante+1). | Siklus state yang terus berlanjut. |
