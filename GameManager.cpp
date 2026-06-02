@@ -16,6 +16,8 @@ void GameManager::runSession(){
     cout << "=== Run Started ===\n";
     bool isPlaying = true;
     
+    deck.reset(); // Standard reset only at the very start of a run
+
     while (isPlaying) {
         cout << "\n=== New Blind Started ===\n";
         cout << "Current Blind: " << currentBlind->getName() << " (Ante " << currentAnte << ")\n";
@@ -23,7 +25,7 @@ void GameManager::runSession(){
         cout << "Target Score to Win: " << targetScore << "\n";
         cout << "Reward on Victory: $" << currentBlind->getRewardMoney() << "\n";
         
-        deck.reset(); 
+        deck.recollect(); // Gather all discarded and hand cards back into the deck
         handGenerator.shuffleDeck(deck); // Use HandGenerator for shuffling
         remainingHands = maxHands; 
         int accumulatedScore = 0;
@@ -117,6 +119,9 @@ void GameManager::runSession(){
             cout << "Result: LOSE! No hands remaining. Game Over.\n";
             isPlaying = false;
         }
+
+        // Return any leftover cards in hand to the discard pile before the next round
+        deck.discard(playerHand.cards);
     }
     
     cout << "=== Run Ended ===\n";

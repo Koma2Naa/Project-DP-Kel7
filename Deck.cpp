@@ -16,6 +16,13 @@ void Deck::reset() {
     }
 }
 
+void Deck::recollect() {
+    for (const auto& card : discardPile) {
+        cards.push_back(card);
+    }
+    discardPile.clear();
+}
+
 void Deck::discard(const std::vector<Card>& playedCards) {
     for (const auto& card : playedCards) {
         discardPile.push_back(card);

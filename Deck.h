@@ -6,6 +6,7 @@ class Deck {
 public:
     Deck();
     void reset();           // Resets to full 52 cards
+    void recollect();       // Returns discard pile to the deck
     void discard(const std::vector<Card>& cards);
     void addCard(Card card);
     void addCards(const std::vector<Card>& newCards);
