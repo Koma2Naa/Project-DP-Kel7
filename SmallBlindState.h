@@ -3,8 +3,13 @@
 
 class SmallBlindState : public BlindState {
 public:
+    SmallBlindState();
     std::string getName() const override;
     int getTargetScore(int ante) const override;
     int getRewardMoney() const override;
     std::unique_ptr<BlindState> nextState(int& ante) const override;
+    SkipStrategy* getSkipStrategy() const override;
+
+private:
+    std::unique_ptr<SkipStrategy> skipStrategy;
 };

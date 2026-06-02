@@ -12,6 +12,14 @@ void GameManager::addJoker(std::unique_ptr<Joker> joker) {
     activeJokers.push_back(std::move(joker));
 }
 
+std::vector<std::string> GameManager::getOwnedJokerNames() const {
+    std::vector<std::string> names;
+    for (const auto& j : activeJokers) {
+        names.push_back(j->getName());
+    }
+    return names;
+}
+
 void GameManager::runSession(){
     cout << "=== Run Started ===\n";
     bool isPlaying = true;
@@ -25,6 +33,25 @@ void GameManager::runSession(){
         cout << "Target Score to Win: " << targetScore << "\n";
         cout << "Reward on Victory: $" << currentBlind->getRewardMoney() << "\n";
         
+        // Skip Blind Info Display
+        SkipStrategy* skipStrat = currentBlind->getSkipStrategy();
+        if (skipStrat != nullptr) {
+            cout << "Skip Reward: " << skipStrat->getDescription() << "\n";
+        }
+
+        // Skip Blind Prompt
+        if (skipStrat != nullptr) {
+            cout << "\n>>> [P]lay Blind or [S]kip? (P/S): ";
+            string choice;
+            getline(cin, choice);
+            if (choice == "S" || choice == "s") {
+                skipStrat->apply(*this);
+                cout << "Skipping blind and moving to the next round...\n";
+                currentBlind = currentBlind->nextState(currentAnte);
+                continue; // Skip the rest of the loop (playing and shop)
+            }
+        }
+
         deck.recollect(); // Gather all discarded and hand cards back into the deck
         handGenerator.shuffleDeck(deck); // Use HandGenerator for shuffling
         remainingHands = maxHands; 

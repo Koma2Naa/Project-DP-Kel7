@@ -17,6 +17,11 @@ class GameManager{
         void runSession();
         void addJoker(std::unique_ptr<Joker> joker);
         void displayActiveJokers() const;
+        
+        void addMoney(int amount) { playerMoney += amount; }
+        int getMoney() const { return playerMoney; }
+        std::vector<std::string> getOwnedJokerNames() const;
+
     private:
         HandGenerator handGenerator;
         HandPlayer handPlayer;
