@@ -25,6 +25,9 @@ class GameManager{
         void addPendingFreeShopJoker() { pendingFreeShopJokers++; }
         int& getPendingFreeShopJokers() { return pendingFreeShopJokers; }
 
+        void addPendingExtraHands() { pendingExtraHands++; }
+        void addCardToDeck(Card card) { deck.addCard(card); }
+
     private:
         HandGenerator handGenerator;
         HandPlayer handPlayer;
@@ -44,4 +47,5 @@ class GameManager{
 
         std::vector<std::unique_ptr<Joker>> activeJokers;
         int pendingFreeShopJokers = 0;
+        int pendingExtraHands = 0;
 };

@@ -54,7 +54,11 @@ void GameManager::runSession(){
 
         deck.recollect(); // Gather all discarded and hand cards back into the deck
         handGenerator.shuffleDeck(deck); // Use HandGenerator for shuffling
-        remainingHands = maxHands; 
+        remainingHands = maxHands + pendingExtraHands; 
+        if (pendingExtraHands > 0) {
+            cout << "[TAG] Applied +" << pendingExtraHands << " Extra Hands for this blind!\n";
+        }
+        pendingExtraHands = 0; // Reset for next time
         int accumulatedScore = 0;
         bool blindWon = false;
 

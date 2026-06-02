@@ -1,9 +1,9 @@
 #include "SmallBlindState.h"
 #include "BigBlindState.h"
-#include "MoneySkipStrategy.h"
+#include "SkipStrategyFactory.h"
 
 SmallBlindState::SmallBlindState() {
-    skipStrategy = std::make_unique<MoneySkipStrategy>();
+    skipStrategy = SkipStrategyFactory::getRandomStrategy();
 }
 
 std::string SmallBlindState::getName() const { return "Small Blind"; }

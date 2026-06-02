@@ -1,9 +1,9 @@
 #include "BigBlindState.h"
 #include "BossBlindState.h"
-#include "FreeJokerSkipStrategy.h"
+#include "SkipStrategyFactory.h"
 
 BigBlindState::BigBlindState() {
-    skipStrategy = std::make_unique<FreeJokerSkipStrategy>();
+    skipStrategy = SkipStrategyFactory::getRandomStrategy();
 }
 
 std::string BigBlindState::getName() const { return "Big Blind"; }
